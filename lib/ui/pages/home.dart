@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_mobile/database/movie_wrapper.dart';
 import 'package:movie_mobile/network/auth/entity/keycloak_token.dart';
-import 'package:movie_mobile/network/auth/refresh.dart';
 import 'package:movie_mobile/network/movie/entity/movie.dart';
-import 'package:movie_mobile/network/movie/load_movies.dart';
 
 class Home extends StatefulWidget {
   final KeycloakToken token;
@@ -15,62 +13,18 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  late Future<List<Movie>> movies = Future<List<Movie>>.value([]);
+  final MovieDBWrapper _db = MovieDBWrapper();
+  late Future<List<Movie>> movies = _db.load();
 
   @override
   void initState() {
-    if (widget.token.expiresIn < DateTime.now().millisecondsSinceEpoch) {
-      debugPrint("Need refresh! ${widget.token.refreshToken}");
-      updateToken();
-    } else {
-      movies = loadMovies(widget.token, 0);
-    }
-    testMovie();
+    _db.synchronize(widget.token).then((value) {
+      debugPrint("Finished. Update to date now!");
+      setState(() {
+        movies = _db.load();
+      });
+    });
     super.initState();
-  }
-
-  void updateToken() {
-    refresh(widget.token).then(
-      (newToken) {
-        widget.token.accessToken = newToken.accessToken;
-        widget.token.refreshExpiresIn = newToken.refreshExpiresIn;
-        widget.token.refreshToken = newToken.refreshToken;
-        widget.token.expiresIn = newToken.expiresIn;
-        widget.token.idToken = newToken.idToken;
-        widget.token.scope = newToken.scope;
-        widget.token.tokenType = newToken.tokenType;
-        debugPrint("Done!");
-
-        setState(() {
-          movies = loadMovies(widget.token, 0);
-        });
-      },
-    );
-  }
-
-  void testMovie() {
-    MovieDBWrapper db = MovieDBWrapper();
-    db.load().then(
-      (dbList) {
-        for (var movie in dbList) {
-          debugPrint("Movie ${movie.name}");
-        }
-      },
-    );
-    movies.then(
-      (value) {
-        for (var movie in value) {
-          db.insert(movie);
-        }
-      },
-    );
-    db.load().then(
-      (dbList) {
-        for (var movie in dbList) {
-          debugPrint("Movie ${movie.name}");
-        }
-      },
-    );
   }
 
   @override
@@ -94,7 +48,7 @@ class _HomeState extends State<Home> {
     return FutureBuilder<List<Movie>>(
       future: movies,
       builder: (context, AsyncSnapshot<List<Movie>> snapshot) {
-        if (snapshot.hasData) {
+        if (snapshot.hasData && snapshot.data!.isNotEmpty) {
           return Expanded(
               child: ListView.builder(
             itemCount: snapshot.data!.length,
@@ -110,12 +64,12 @@ class _HomeState extends State<Home> {
 
   Widget buildMovieRow(Movie movie) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
       child: Container(
-        padding: EdgeInsets.all(15),
+        padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.onSurface,
-            borderRadius: BorderRadius.all(Radius.circular(10))),
+            borderRadius: const BorderRadius.all(Radius.circular(10))),
         child: Text(
           movie.name,
           style: TextStyle(
