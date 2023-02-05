@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:movie_mobile/network/login/request.dart';
+import 'package:movie_mobile/network/auth/login.dart';
 import 'package:movie_mobile/ui/pages/home.dart';
 
 class Login extends StatefulWidget {
@@ -97,7 +97,7 @@ class _LoginState extends State<Login> {
 
   void _onLogin() {
     login(username, password)
-        .then((token) => Navigator.push(
+        .then((token) => Navigator.pushReplacement(
             context,
             MaterialPageRoute(
               builder: (context) => Home(token: token),

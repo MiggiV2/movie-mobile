@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:movie_mobile/network/login/keycloak_token.dart';
+import 'package:movie_mobile/network/auth/entity/keycloak_token.dart';
 import 'package:movie_mobile/ui/pages/home.dart';
 import 'package:movie_mobile/ui/pages/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,10 +32,8 @@ class _StartState extends State<Start> {
   }
 
   void openPage(KeycloakToken localTokens) {
-    Navigator.push(context, MaterialPageRoute(
+    Navigator.pushReplacement(context, MaterialPageRoute(
       builder: (context) {
-        debugPrint(
-            "exp: ${localTokens.refreshExpiresIn} now: ${DateTime.now().millisecondsSinceEpoch}");
         if (localTokens.refreshExpiresIn <
             DateTime.now().millisecondsSinceEpoch) {
           return const Login();

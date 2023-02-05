@@ -32,7 +32,7 @@ class KeycloakToken {
         scope = map["scope"];
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['accessToken'] = accessToken;
     data['expiresIn'] = expiresIn;
     data['refreshExpiresIn'] = refreshExpiresIn;
