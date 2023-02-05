@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_mobile/database/movie_wrapper.dart';
 import 'package:movie_mobile/network/auth/entity/keycloak_token.dart';
 import 'package:movie_mobile/network/auth/refresh.dart';
 import 'package:movie_mobile/network/movie/entity/movie.dart';
@@ -24,6 +25,7 @@ class _HomeState extends State<Home> {
     } else {
       movies = loadMovies(widget.token, 0);
     }
+    testMovie();
     super.initState();
   }
 
@@ -42,6 +44,31 @@ class _HomeState extends State<Home> {
         setState(() {
           movies = loadMovies(widget.token, 0);
         });
+      },
+    );
+  }
+
+  void testMovie() {
+    MovieDBWrapper db = MovieDBWrapper();
+    db.load().then(
+      (dbList) {
+        for (var movie in dbList) {
+          debugPrint("Movie ${movie.name}");
+        }
+      },
+    );
+    movies.then(
+      (value) {
+        for (var movie in value) {
+          db.insert(movie);
+        }
+      },
+    );
+    db.load().then(
+      (dbList) {
+        for (var movie in dbList) {
+          debugPrint("Movie ${movie.name}");
+        }
       },
     );
   }

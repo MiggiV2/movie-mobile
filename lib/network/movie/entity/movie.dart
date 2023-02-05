@@ -16,7 +16,7 @@ class Movie {
         wikiUrl = json['wikiUrl'],
         type = json['type'];
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['year'] = year;
