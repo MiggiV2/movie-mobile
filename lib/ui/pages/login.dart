@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:movie_mobile/network/login/request.dart';
+import 'package:movie_mobile/ui/pages/home.dart';
 
-class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+class Login extends StatefulWidget {
+  const Login({Key? key}) : super(key: key);
 
   @override
-  State<Home> createState() => _HomeState();
+  State<Login> createState() => _LoginState();
 }
 
-class _HomeState extends State<Home> {
+class _LoginState extends State<Login> {
   String username = "", password = "";
   bool isObscureText = true;
 
@@ -94,7 +95,24 @@ class _HomeState extends State<Home> {
     );
   }
 
-  void _onLogin() async {
-    login(username, password);
+  void _onLogin() {
+    login(username, password)
+        .then((token) => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Home(token: token),
+            )))
+        .catchError(handleError);
+  }
+
+  handleError(e) {
+    debugPrint(e.toString());
+    String msg = "Error";
+    if (e.toString().startsWith("Failed host lookup: ")) {
+      msg = "Check your internet. (DNS)";
+    } else {
+      msg = e.toString().replaceFirst("Exception: ", "");
+    }
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 }

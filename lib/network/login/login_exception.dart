@@ -8,9 +8,10 @@ class _IncorrectException implements IncorrectException {
 
   _IncorrectException([this.message]);
 
+  @override
   String toString() {
     Object? message = this.message;
-    if (message == null) return "Exception";
+    if (message == null) return "IncorrectException";
     return "Exception: $message";
   }
 }

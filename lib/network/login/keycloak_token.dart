@@ -1,4 +1,4 @@
-class LoginResponse {
+class KeycloakToken {
   String accessToken;
   int expiresIn;
   int refreshExpiresIn;
@@ -9,7 +9,18 @@ class LoginResponse {
   String seasonState;
   String scope;
 
-  LoginResponse.fromJsonMap(Map<String, dynamic> map)
+  KeycloakToken()
+      : accessToken = "",
+        expiresIn = 0,
+        refreshExpiresIn = 0,
+        refreshToken = "",
+        tokenType = "",
+        idToken = "",
+        notBeforePolicy = 0,
+        seasonState = "",
+        scope = "";
+
+  KeycloakToken.fromJsonMap(Map<String, dynamic> map)
       : accessToken = map["accessToken"],
         expiresIn = map["expiresIn"],
         refreshExpiresIn = map["refreshExpiresIn"],
