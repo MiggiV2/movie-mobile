@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_mobile/network/movie/entity/movie.dart';
+import 'package:movie_mobile/ui/wiget/simple_divider.dart';
 
 class MovieCard extends StatelessWidget {
   final Movie movie;
@@ -9,16 +10,27 @@ class MovieCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+      padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 10),
       child: Container(
         padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.onSurface,
+            color: Theme.of(context).colorScheme.secondaryContainer,
             borderRadius: const BorderRadius.all(Radius.circular(10))),
-        child: Text(
-          movie.name,
-          style: TextStyle(
-              color: Theme.of(context).colorScheme.background, fontSize: 19),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              movie.name,
+              style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSecondaryContainer,
+                  fontSize: 20),
+            ),
+            SimpleDivider(),
+            Text("Aus dem Jahre ${movie.year}",
+                style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSecondaryContainer,
+                    fontSize: 14))
+          ],
         ),
       ),
     );

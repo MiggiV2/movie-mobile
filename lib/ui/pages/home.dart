@@ -31,8 +31,8 @@ class _HomeState extends State<Home> {
           "Movie Archive",
           style: TextStyle(fontFamily: "Roboto-Bold", fontSize: 21),
         ),
-        backgroundColor: Theme.of(context).colorScheme.surfaceTint,
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
       ),
       body: Column(
         children: [_buildSearch(), buildMovieList()],

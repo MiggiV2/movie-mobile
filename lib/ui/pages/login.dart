@@ -21,8 +21,8 @@ class _LoginState extends State<Login> {
           "Movie - Login",
           style: TextStyle(fontFamily: "Roboto-Bold", fontSize: 21),
         ),
-        backgroundColor: Theme.of(context).colorScheme.surfaceTint,
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
       ),
       body: SizedBox(
         height: MediaQuery.of(context).size.height * 0.55,
