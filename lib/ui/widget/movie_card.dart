@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_mobile/network/movie/entity/movie.dart';
-import 'package:movie_mobile/ui/wiget/simple_divider.dart';
+import 'package:movie_mobile/ui/widget/simple_divider.dart';
 
 class MovieCard extends StatelessWidget {
   final Movie movie;

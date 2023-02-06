@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:movie_mobile/database/movie_wrapper.dart';
 import 'package:movie_mobile/network/auth/entity/keycloak_token.dart';
 import 'package:movie_mobile/network/movie/entity/movie.dart';
-import 'package:movie_mobile/ui/wiget/movie_card.dart';
+import 'package:movie_mobile/ui/widget/movie_card.dart';
 
 class Home extends StatefulWidget {
   final KeycloakToken token;
