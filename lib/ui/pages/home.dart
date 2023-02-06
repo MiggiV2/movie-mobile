@@ -27,12 +27,14 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Movie Archive",
-          style: TextStyle(fontFamily: "Roboto-Bold", fontSize: 21),
+        title: const Center(
+          child: Text(
+            "Movie Archive",
+            style: TextStyle(fontFamily: "Roboto-Bold", fontSize: 24),
+          ),
         ),
-        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-        foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+        backgroundColor: Theme.of(context).colorScheme.background,
+        foregroundColor: Theme.of(context).colorScheme.onBackground,
       ),
       body: Column(
         children: [_buildSearch(), buildMovieList()],
@@ -60,7 +62,7 @@ class _HomeState extends State<Home> {
 
   Padding _buildSearch() {
     return Padding(
-      padding: const EdgeInsets.all(18.0),
+      padding: const EdgeInsets.only(bottom: 18, left: 18, right: 18),
       child: TextField(
           onChanged: updateList,
           decoration: const InputDecoration(

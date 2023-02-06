@@ -8,7 +8,7 @@ class SimpleDivider extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Divider(
-        color: Theme.of(context).colorScheme.onSecondaryContainer,
+        color: Theme.of(context).colorScheme.onBackground,
         height: 0,
         thickness: 1,
       ),

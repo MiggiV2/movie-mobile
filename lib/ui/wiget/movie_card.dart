@@ -14,7 +14,10 @@ class MovieCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.secondaryContainer,
+            color: Theme.of(context)
+                .colorScheme
+                .secondaryContainer
+                .withOpacity(0.3),
             borderRadius: const BorderRadius.all(Radius.circular(10))),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -22,13 +25,14 @@ class MovieCard extends StatelessWidget {
             Text(
               movie.name,
               style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSecondaryContainer,
-                  fontSize: 20),
+                  color: Theme.of(context).colorScheme.onBackground,
+                  fontSize: 20,
+                  fontFamily: "Roboto-Bold"),
             ),
-            SimpleDivider(),
+            const SimpleDivider(),
             Text("Aus dem Jahre ${movie.year}",
                 style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSecondaryContainer,
+                    color: Theme.of(context).colorScheme.onBackground,
                     fontSize: 14))
           ],
         ),
