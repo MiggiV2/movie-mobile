@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_mobile/network/movie/entity/movie.dart';
+import 'package:movie_mobile/ui/widget/omdb_details.dart';
 import 'package:movie_mobile/ui/widget/simple_divider.dart';
 
 class MovieDetails extends StatelessWidget {
@@ -35,6 +36,19 @@ class MovieDetails extends StatelessWidget {
                 ],
               ),
               Text("Zufinden in ${movie.block}"),
+              OmdbDetails(movie: movie),
+              Padding(
+                padding: const EdgeInsets.only(top: 30),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    OutlinedButton(
+                        onPressed: () {}, child: Text("Auf Wikipedia öffnen")),
+                    OutlinedButton(
+                        onPressed: () {}, child: Text("Trailer suchen")),
+                  ],
+                ),
+              ),
             ],
           ),
         ));
