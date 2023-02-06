@@ -16,10 +16,11 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final MovieDBWrapper _db = MovieDBWrapper();
   late Future<List<Movie>> movies = _db.load();
+  bool _isLoading = false;
 
   @override
   void initState() {
-    fetchAllOnEmpty();
+    updateMovieList(onlyOnEmpty: false);
     super.initState();
   }
 
@@ -46,18 +47,37 @@ class _HomeState extends State<Home> {
     return FutureBuilder<List<Movie>>(
       future: movies,
       builder: (context, AsyncSnapshot<List<Movie>> snapshot) {
-        if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-          return Expanded(
-              child: ListView.builder(
-            itemCount: snapshot.data!.length,
-            itemBuilder: (context, index) =>
-                MovieCard(movie: snapshot.data![index]),
-          ));
+        if (snapshot.hasData && !_isLoading) {
+          return buildMovies(snapshot, context);
         } else {
-          return const Center(child: CircularProgressIndicator());
+          return const Padding(
+            padding: EdgeInsets.only(top: 48.0),
+            child: Center(child: CircularProgressIndicator()),
+          );
         }
       },
     );
+  }
+
+  Widget buildMovies(
+      AsyncSnapshot<List<Movie>> snapshot, BuildContext context) {
+    if (snapshot.data!.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Center(
+          child: Text("No movies found!",
+              style: TextStyle(
+                  color: Theme.of(context).colorScheme.onBackground,
+                  fontSize: 22,
+                  fontFamily: "Roboto-Regular")),
+        ),
+      );
+    }
+    return Expanded(
+        child: ListView.builder(
+      itemCount: snapshot.data!.length,
+      itemBuilder: (context, index) => MovieCard(movie: snapshot.data![index]),
+    ));
   }
 
   Padding _buildSearch() {
@@ -73,20 +93,24 @@ class _HomeState extends State<Home> {
   }
 
   void updateList(query) {
+    _isLoading = true;
     _db.search(query).then((result) {
       setState(() {
         movies = Future<List<Movie>>.value(result);
+        _isLoading = false;
       });
     });
   }
 
-  void fetchAllOnEmpty() {
+  void updateMovieList({bool onlyOnEmpty = false}) {
     movies.then((value) {
-      if (value.isEmpty) {
+      if (onlyOnEmpty || value.isEmpty) {
+        _isLoading = true;
         _db.synchronize(widget.token).then((value) {
           debugPrint("Finished. Update to date now!");
           setState(() {
             movies = _db.load();
+            _isLoading = false;
           });
         });
       }
