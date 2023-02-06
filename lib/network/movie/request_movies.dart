@@ -14,7 +14,7 @@ Future<List<Movie>> requestMovies(KeycloakToken token, int page) async {
   final url = Uri(
       scheme: 'https',
       host: 'apis.mymiggi.de',
-      path: 'movie-archive/user/get-movies',
+      path: 'movie-archive/user/sorted-movies/by-name',
       query: 'page=$page');
   var response = await http.get(url, headers: {
     "Content-Type": "application/json",

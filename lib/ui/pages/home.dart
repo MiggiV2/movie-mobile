@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:movie_mobile/database/movie_wrapper.dart';
 import 'package:movie_mobile/network/auth/entity/keycloak_token.dart';
 import 'package:movie_mobile/network/movie/entity/movie.dart';
+import 'package:movie_mobile/ui/wiget/movie_card.dart';
 
 class Home extends StatefulWidget {
   final KeycloakToken token;
@@ -18,12 +19,7 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    _db.synchronize(widget.token).then((value) {
-      debugPrint("Finished. Update to date now!");
-      setState(() {
-        movies = _db.load();
-      });
-    });
+    fetchAllOnEmpty();
     super.initState();
   }
 
@@ -53,7 +49,7 @@ class _HomeState extends State<Home> {
               child: ListView.builder(
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) =>
-                buildMovieRow(snapshot.data![index]),
+                MovieCard(movie: snapshot.data![index]),
           ));
         } else {
           return const Center(child: CircularProgressIndicator());
@@ -62,31 +58,36 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget buildMovieRow(Movie movie) {
+  Padding _buildSearch() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-      child: Container(
-        padding: const EdgeInsets.all(15),
-        decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.onSurface,
-            borderRadius: const BorderRadius.all(Radius.circular(10))),
-        child: Text(
-          movie.name,
-          style: TextStyle(
-              color: Theme.of(context).colorScheme.background, fontSize: 19),
-        ),
-      ),
+      padding: const EdgeInsets.all(18.0),
+      child: TextField(
+          onChanged: updateList,
+          decoration: const InputDecoration(
+            hintText: "Movie title",
+            suffixIcon: Icon(Icons.search),
+          )),
     );
   }
 
-  Padding _buildSearch() {
-    return const Padding(
-      padding: EdgeInsets.all(18.0),
-      child: TextField(
-          decoration: InputDecoration(
-        hintText: "Movie title",
-        suffixIcon: Icon(Icons.search),
-      )),
-    );
+  void updateList(query) {
+    _db.search(query).then((result) {
+      setState(() {
+        movies = Future<List<Movie>>.value(result);
+      });
+    });
+  }
+
+  void fetchAllOnEmpty() {
+    movies.then((value) {
+      if (value.isEmpty) {
+        _db.synchronize(widget.token).then((value) {
+          debugPrint("Finished. Update to date now!");
+          setState(() {
+            movies = _db.load();
+          });
+        });
+      }
+    });
   }
 }
