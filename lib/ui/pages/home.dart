@@ -20,7 +20,7 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    updateMovieList(onlyOnEmpty: false);
+    updateMovieList(forceUpdate: true);
     super.initState();
   }
 
@@ -99,21 +99,35 @@ class _HomeState extends State<Home> {
         movies = Future<List<Movie>>.value(result);
         _isLoading = false;
       });
-    });
+    }).onError((error, stackTrace) => handleError(error));
   }
 
-  void updateMovieList({bool onlyOnEmpty = false}) {
+  void updateMovieList({bool forceUpdate = false}) {
     movies.then((value) {
-      if (onlyOnEmpty || value.isEmpty) {
-        _isLoading = true;
+      if (forceUpdate || value.isEmpty) {
+        _isLoading = value.isEmpty; // only loading when no movies
         _db.synchronize(widget.token).then((value) {
           debugPrint("Finished. Update to date now!");
           setState(() {
             movies = _db.load();
             _isLoading = false;
           });
-        });
+        }).onError((error, stackTrace) => handleError(error));
       }
     });
+  }
+
+  handleError(e) {
+    setState(() {
+      _isLoading = false;
+    });
+    debugPrint(e.toString());
+    String msg = "Error";
+    if (e.toString().startsWith("Failed host lookup: ")) {
+      msg = "You are offline";
+    } else {
+      msg = e.toString().replaceFirst("Exception: ", "");
+    }
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 }
