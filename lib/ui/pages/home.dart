@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_mobile/database/movie_wrapper.dart';
+import 'package:movie_mobile/database/sync/sync_database.dart';
 import 'package:movie_mobile/network/auth/entity/keycloak_token.dart';
 import 'package:movie_mobile/network/movie/entity/movie.dart';
 import 'package:movie_mobile/ui/widget/movie_card.dart';
@@ -20,7 +21,8 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    updateMovieList(forceUpdate: true);
+    //updateMovieList(forceUpdate: true);
+    syncDatabase(_db, widget.token);
     super.initState();
   }
 

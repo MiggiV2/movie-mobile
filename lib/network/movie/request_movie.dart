@@ -7,15 +7,15 @@ import 'package:movie_mobile/network/auth/refresh.dart';
 
 import 'entity/movie.dart';
 
-Future<List<Movie>> requestMovies(KeycloakToken token, int page) async {
+Future<Movie> requestMovie(KeycloakToken token, int id) async {
   if (token.expiresIn < DateTime.now().millisecondsSinceEpoch) {
     await updateToken(token);
   }
   final url = Uri(
       scheme: 'https',
       host: 'apis.mymiggi.de',
-      path: 'movie-archive/user/sorted-movies/by-name',
-      query: 'page=$page');
+      path: 'movie-archive/user/get-movie-by-id',
+      query: 'id=$id');
   var response = await http.get(url, headers: {
     "Content-Type": "application/json",
     "authorization": "Bearer ${token.accessToken}"
@@ -24,8 +24,7 @@ Future<List<Movie>> requestMovies(KeycloakToken token, int page) async {
     throw Exception("Status ${response.statusCode}");
   }
   String jsonStr = utf8.decode(response.bodyBytes);
-  final jsonList = json.decode(jsonStr) as List;
-  return jsonList.map((e) => Movie.fromJson(e)).toList();
+  return Movie.fromJson(json.decode(jsonStr));
 }
 
 Future<void> updateToken(KeycloakToken token) async {

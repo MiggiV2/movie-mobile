@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
+
 class Movie {
   int id;
   int year;
@@ -6,6 +10,9 @@ class Movie {
   String block;
   String wikiUrl;
   String type;
+
+  Movie(this.id, this.year, this.name, this.uuid, this.block, this.wikiUrl,
+      this.type);
 
   Movie.fromJson(Map<String, dynamic> json)
       : id = json['id'],
@@ -26,5 +33,11 @@ class Movie {
     data['wikiUrl'] = wikiUrl;
     data['type'] = type;
     return data;
+  }
+
+  String getHash() {
+    String input =
+        "year:$year,name:$name,uuid:$uuid,block:$block,wikiUrl:$wikiUrl,type:$type";
+    return md5.convert(utf8.encode(input)).toString();
   }
 }
