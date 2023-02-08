@@ -21,7 +21,6 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    //updateMovieList(forceUpdate: true);
     syncDatabase(_db, widget.token);
     super.initState();
   }
@@ -102,21 +101,6 @@ class _HomeState extends State<Home> {
         _isLoading = false;
       });
     }).onError((error, stackTrace) => handleError(error));
-  }
-
-  void updateMovieList({bool forceUpdate = false}) {
-    movies.then((value) {
-      if (forceUpdate || value.isEmpty) {
-        _isLoading = value.isEmpty; // only loading when no movies
-        _db.synchronize(widget.token).then((value) {
-          debugPrint("Finished. Update to date now!");
-          setState(() {
-            movies = _db.load();
-            _isLoading = false;
-          });
-        }).onError((error, stackTrace) => handleError(error));
-      }
-    });
   }
 
   handleError(e) {
