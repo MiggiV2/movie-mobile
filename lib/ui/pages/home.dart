@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_mobile/database/fetch_all.dart';
 import 'package:movie_mobile/database/movie_wrapper.dart';
 import 'package:movie_mobile/database/sync/sync_database.dart';
 import 'package:movie_mobile/network/auth/entity/keycloak_token.dart';
@@ -21,7 +22,14 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    syncDatabase(_db, widget.token);
+    movies.then((m) => {
+      if (m.isEmpty) {
+        _isLoading = true,
+        fetchAllMovies(widget.token, _db).then((nothing) => updateList(""))
+      } else {
+        syncDatabase(_db, widget.token)
+      }
+    });
     super.initState();
   }
 
