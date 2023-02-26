@@ -5,6 +5,7 @@ import 'package:movie_mobile/database/sync/sync_database.dart';
 import 'package:movie_mobile/network/auth/entity/keycloak_token.dart';
 import 'package:movie_mobile/network/movie/entity/movie.dart';
 import 'package:movie_mobile/ui/widget/movie_card.dart';
+import 'package:movie_mobile/util/version_checker.dart';
 
 class Home extends StatefulWidget {
   final KeycloakToken token;
@@ -22,14 +23,13 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
+    VersionChecker().checkVersion(context);
     movies.then((m) => {
-      if (m.isEmpty) {
-        _isLoading = true,
-        fetchAllMovies(widget.token, _db).then((nothing) => updateList(""))
-      } else {
-        syncDatabase(_db, widget.token)
-      }
-    });
+          if (m.isEmpty)
+            {_isLoading = true, fetchAllMovies(widget.token, _db).then((nothing) => updateList(""))}
+          else
+            {syncDatabase(_db, widget.token)}
+        });
     super.initState();
   }
 
@@ -68,8 +68,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget buildMovies(
-      AsyncSnapshot<List<Movie>> snapshot, BuildContext context) {
+  Widget buildMovies(AsyncSnapshot<List<Movie>> snapshot, BuildContext context) {
     if (snapshot.data!.isEmpty) {
       return Padding(
         padding: const EdgeInsets.all(8.0),

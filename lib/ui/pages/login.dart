@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_mobile/network/auth/login.dart';
 import 'package:movie_mobile/ui/pages/home.dart';
+import 'package:movie_mobile/util/version_checker.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -37,6 +38,12 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    VersionChecker().checkVersion(context);
+    super.initState();
   }
 
   Column buildInputForm() {
