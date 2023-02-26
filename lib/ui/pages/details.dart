@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:movie_mobile/network/movie/entity/movie.dart';
 import 'package:movie_mobile/ui/widget/omdb_details.dart';
 import 'package:movie_mobile/ui/widget/simple_divider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MovieDetails extends StatelessWidget {
   final Movie movie;
@@ -43,14 +44,25 @@ class MovieDetails extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     OutlinedButton(
-                        onPressed: () {}, child: Text("Auf Wikipedia öffnen")),
+                        onPressed: () => _launchUrl(context,movie.wikiUrl), child: Text("Auf Wikipedia öffnen")),
                     OutlinedButton(
-                        onPressed: () {}, child: Text("Trailer suchen")),
+                        onPressed: () => _launchUrl(context, "https://www.youtube.com/results?search_query=Trailer ${movie.name}"), child: Text("Trailer suchen")),
                   ],
                 ),
               ),
             ],
           ),
         ));
+  }
+
+  Future<void> _launchUrl(BuildContext context, String movieURL) async {
+    final Uri url = Uri.parse(movieURL);
+    if (!await launchUrl(url)) {
+      showError(context,url);
+    }
+  }
+
+  void showError(BuildContext context,Uri url) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Could not launch $url')));
   }
 }
